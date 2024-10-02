@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <title>Announcement Translation Engine</title>
+  <link rel="stylesheet" href="/../static/styles.css">
+</head>
+<body>
+  <div id='title'>
+    <p><span style="font-weight:500;">Multilingual</span> Translation Demo</p>
+  </div>
+  <div class="announcement-section">
+    <div id='translate-input' class='translate-input'>
+      <input type='text' id='source-text' placeholder='Enter text here' autocomplete="off"/>
+      <div class='translate-section'>
+      <select id='languages'><select></label>
+        <button id="announce-btn" class="btn">Make Announcement</button>
+      </div>
+      </div>
+      
+      <div id='announcement-info-container' class='announcement-info-container'>
+        <div id='announcement-info' class='announcement-info'>
+          <p id='announcement-info-text'>...</p>
+        </div>
+        <div id='announcement-info-time' class='announcement-info'>
+          <p id='announcement-info-time-text'>...</p>
+        </div>
+        <div id='stop-announcements' class='announcement-info'>
+          <i class="fa-solid fa-stop"></i><p id='stop-text'> Stop</p>
+        </div>
+      </div>
+      <div id="announcement" class="announcement">
+        <p id='translation-output'>Announcement will appear here</p>
+      </div>
+
+      <div class='button-section'>
+      
+      <i id='listen' class="fa fa-volume-up" aria-hidden="true"></i>
+      <i class="fa-solid fa-repeat"></i>
+      </div>
+  </div>
+
+  <div id='audio-files'>
+  </div>
+  <div id='temp_audio_files'>
+  </div>
+  <div id='chimes'>
+    <audio id='chime_1'>
+      <source src="{{ url_for('static', filename='chimes/chime_1.mp3') }}" type='audio/mpeg'>
+    </audio>
+    <audio id='chime_2'>
+      <source src='../static/chimes/chime_2.mp3' type='audio/mpeg'>
+    </audio>
+    <audio id='chime_3'>
+      <source src='../static/chimes/chime_3.mp3' type='audio/mpeg'>
+    </audio>
+    <audio id='chime_4'>
+      <source src='../static/chimes/chime_4.mp3' type='audio/mpeg'>
+    </audio>
+  </div>
+
+  <!-- Options -->
+  <div class='options-container'>
+    <button id="play-custom-announcements" class="options btn">Play custom</button>  
+  <button id="custom-announcements" class="options btn">Create Custom</button>
+  </div>
+
+  <!-- Custom Announcement Modal -->
+
+  <div id='custom-announcement-modal-container'>
+    <dialog id='custom-announcement-modal' class='modal hide'>
+      <i id='close-modal-btn' class="fa fa-close"></i>
+
+      <div id='custom-announcements-pane' class='custom-announcements-pane justify-center align-center flex-column'>
+        <div id='no-custom-announcements'>
+          <p>No custom announcements yet</p>
+          <p>Click + to add a custom announcement</p>
+        </div>
+        <button id='create-custom-announcement' class='btn'>+ Add</button>
+
+        <div id='show-custom-announcements' class='flex-column'>
+
+        </div>
+      </div>
+
+      <div class='custom-announcements-main-container'>
+        <div class='custom-announcements-main'>
+          <div id='create-custom-announcements-form' class='hide'>
+            
+            <label for='announcement-name'>Announcement Name</label>
+
+              <input id='announcement-name' type='text' placeholder='Custom announcement' autocomplete="off" required/>
+              <label for='chime'>Announcement chime</label>
+              <select id='select-chime'>
+                <option value='chime_1'>Chime 1</option>
+                <option value='chime_2'>Chime 2</option>
+                <option value='chime_3'>Chime 3</option>
+                <option value='chime_4'>Chime 4</option>
+              </select>
+              <i id='listen-chime' class="fa fa-volume-up" aria-hidden="true"></i>
+
+              <label for='custom-announcement-input'>Type announcement</label>
+              <input id='custom-announcement-input' type='text' autocomplete="off" placeholder="Attention, dear passengers..." required/>
+              <button id='add-language' class='btn'>+ Add Language</button>
+              <div id='audio-preview-container'>
+                
+
+              </div>
+              
+
+
+              <label for='announce-time'>Announce at time</label>
+              <div id='announce-time-inputs'>
+                <input id='announce-hrs' type='number' min='0' max='23' value='0'>Hours
+                <input id='announce-mins' type='number' min='00' max='59' value='0'>Minutes
+                <input id='announce-secs' type='number' min='00' max='59' value='0'>Seconds
+              </div>
+
+              <button id='save-profile' class='btn' >Save Profile</button>
+            
+              
+
+
+
+          </div>
+        </div>
+
+      </div>
+    </dialog>
+  </div>
+
+  <!-- Add Language Modal -->
+
+  <div id='add-languages-modal-container'>
+
+    <dialog id='add-languages-modal' class='modal hide'>
+      <button id='save-languages' class='btn'>Save</button>
+      <input type='text' id='search-languages' placeholder='search language' autocomplete="off"/>
+      <i id='close-add-languages-btn' class="fa fa-close"></i>
+      <div id='select-languages-container'>
+
+      </div>
+
+    </dialog>
+  </div>
+
+  <div id='alert-box'>
+    <p id='alert-message'></p>
+  </div>
+
+  <!-- Play custom profiles modal -->
+
+  <div id='play-custom-modal-container'>
+
+    <dialog id='play-custom-modal' class='modal hide'>
+      <i id='close-play-modal-btn' class="fa fa-close"></i>
+      <div id='play-profiles-container' class='play-profiles-container'>
+
+      </div>
+
+
+    </dialog>
+
+  </div>
+
+
+
+  <!-- Clock -->
+
+  <div class='clock-main-container'>
+
+    <div class='clock-time-container'>
+      <h1 class='clock-time'>
+        <span id="digihr">10</span>:<span id="digimin">40</span>:<span id="digisec">32</span><span id='am-pm' style="font-size: 0.5em;"> </span>
+      </h1>
+    </div>
+
+
+    <div class="clock-container">
+      <div id="clock" class="clock">
+          <div class="label">
+          <h1>Nav Times</h1>
+          </div>
+      <div class="center"></div>
+          <div class="hrhand"></div>
+          <div class="minhand"></div>
+          <div id="second" class="sechand"></div>
+          <div id='mark' class="mark"></div>
+      </div>
+      
+  </div>
+
+  
+  
+
+  </div>
+
+  <div id='sound-effects'>
+    <audio id='paper-crush'>
+      <source type='audio/mpeg' src='../static/sound_effects/paper_crush.mp3'>
+    </audio>
+  </div>
+
+  
+
+
+  <script src="/../static/script.js"></script>
+</body>
+</html>
